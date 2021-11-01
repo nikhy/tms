@@ -1,0 +1,3 @@
+aws cloudformation package --template-file tms-be-app/sam-template.yaml --s3-bucket tms-be-sam-template-bucket --output-template-file tms-be-app/out1.yaml --no-verify-ssl
+sam deploy --template-file tms-be-app/out1.yaml --stack-name TMS-BE-APP --region ap-south-1 --capabilities CAPABILITY_IAM --parameter-overrides IAMROLE="arn:aws:iam::054455970454:role/service-role/sample-aap-role-o0ixphk8" ENVIRONMENT=DEV DBSERVER="pi-tms-deloitte-1.co1gngqpr0rd.us-east-2.rds.amazonaws.com" DBPORT=1433 DBNAME="tms_deloitte" DBUSER="admin" DBPASSWORD="MP2mBIzkCa0f3r3MTWXD"
+@REM aws apigateway create-deployment  --stage-name DEV

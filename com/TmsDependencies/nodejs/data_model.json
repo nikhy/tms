@@ -1,0 +1,19 @@
+[
+  {
+    "tableName": "ref.ToolMaster",
+    "columns": [
+      {
+        "columnName": "Tool_id",
+        "type": "bigint"
+      },
+      {
+        "columnName": "tool_life",
+        "type": "float"
+      },
+      {
+        "columnName": "tool_used",
+        "type": "float"
+      }
+    ]
+  }
+]

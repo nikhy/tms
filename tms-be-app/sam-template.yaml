@@ -1,0 +1,155 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: tms app
+Parameters:
+  ENVIRONMENT:
+    Description: Required. StageName
+    Type: String
+  DBSERVER:
+    Description: Required. Database Uri
+    Type: String
+  DBPORT:
+    Description: Required. Database Port
+    Type: Number
+  DBNAME:
+    Description: Required. Database Password
+    Type: String
+  DBUSER:
+    Description: Required. Database Username
+    Type: String
+  DBPASSWORD:
+    Description: Required. Database Password
+    Type: String
+
+  IAMROLE:
+        Description: 'Required. IAM Role for the lambdas'
+        Type: String
+
+Globals:
+  Function:
+    Runtime: nodejs14.x
+    Timeout: 300
+    MemorySize: 256
+    Handler: app.handler
+    Tracing: Active
+    Layers:
+      - Ref: TmsDependenciesLayer
+    
+
+    Environment:
+      Variables:
+        DB_SERVER:
+          Fn::Sub: ${DBSERVER}
+        DB_PORT:
+          Fn::Sub: ${DBPORT}
+        DB_NAME:
+          Fn::Sub: ${DBNAME}
+        DB_USER:
+          Fn::Sub: ${DBUSER}
+        DB_PASSWORD:
+          Fn::Sub: ${DBPASSWORD}
+  Api:
+    Cors:
+      AllowMethods: "'POST,OPTIONS'"
+      AllowHeaders: "'*'"
+      AllowOrigin: "'*'"
+Resources:
+  TmsApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName:
+        Fn::Sub: ${ENVIRONMENT}
+      GatewayResponses:
+        DEFAULT_4XX:
+            ResponseParameters:
+                Headers:
+                    Access-Control-Allow-Origin: "'*'"
+         
+        
+
+  TmsDependenciesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: tms-app-dependencies
+      Description: Dependencies for app
+      ContentUri: ../com/TmsDependencies/
+      CompatibleRuntimes:
+        - nodejs10.x
+      RetentionPolicy: Delete
+  
+
+  GetNotifications:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetNotifications/
+      Role: !Sub ${IAMROLE}
+      Events:
+        GetNotifications:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: TmsApi
+            Path: /Tms/GetNotifications/
+            Method: post
+            Auth:
+              ApiKeyRequired: true
+  GetAllTools:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetAllTools/
+      Role: !Sub ${IAMROLE}
+      Events:
+        GetAllTools:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: TmsApi
+            Path: /Tms/GetAllTools/
+            Method: post
+            Auth:
+              ApiKeyRequired: true
+  Login:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: Login/
+      Role: !Sub ${IAMROLE}
+      Events:
+        Login:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: TmsApi
+            Path: /Tms/Login/
+            Method: post
+            Auth:
+              ApiKeyRequired: true
+  AddEditTool:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: AddEditTool/
+      Role: !Sub ${IAMROLE}
+      Events:
+        AddEditTool:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: TmsApi
+            Path: /Tms/AddEditTool/
+            Method: post
+            Auth:
+              ApiKeyRequired: true
+  ChangeTool:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ChangeTool/
+      Role: !Sub ${IAMROLE}
+      Events:
+        ChangeTool:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: TmsApi
+            Path: /Tms/ChangeTool/
+            Method: post
+            Auth:
+              ApiKeyRequired: true
