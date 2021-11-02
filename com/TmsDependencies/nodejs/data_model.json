@@ -1,6 +1,6 @@
 [
   {
-    "tableName": "ref.ToolMaster",
+    "tableName": "Tools",
     "columns": [
       {
         "columnName": "Tool_id",

@@ -10,13 +10,17 @@ async function lambdaFunction(execCtx) {
     let { event, context, result, isAPICall, requestBody, requestParams } = execCtx;
 
     const sqlQuery = `SELECT 
-    CAST(tool_life AS varchar) +' '+ tool_life_unit AS tool_life,
-    tool_number,
-    tool_name,
-    tool_description,
-    last_drawn_stock,
-    rem_stock,
-    order_lead_time
+    tool_master_id AS id,
+    tool_life AS toolLife,
+    tool_life_unit AS toolLifeUnit,
+    tool_number AS toolNumber,
+    tool_name AS toolName,
+    tool_description AS toolDescription,
+    last_drawn_stock AS lastDrawnStock,
+    rem_stock AS remStock,
+    order_lead_time AS orderLeadTime,
+    crictial_parameter_measure AS CriticalParameterMeasure,
+    crictial_parameter_measure_unit AS CriticalParameterMeasureUnit
     FROM tools ORDER BY tool_number`;
     let tools = await data.executeQuery(execCtx, {
         sqlQuery: sqlQuery
