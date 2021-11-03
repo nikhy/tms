@@ -8,7 +8,7 @@ const schema = {
   toolLife: 'tool_life',
   toolLifeUnit: 'tool_life_unit',
   lastDrawnStock: 'last_drawn_stock',
-  remainingUnitsInStore: 'rem_stock',
+  remStock: 'rem_stock',
   orderLeadTime: 'order_lead_time',
   criticalParameterMeasureUnit: 'crictial_parameter_measure_unit',
   criticalParameterMeasure: 'crictial_parameter_measure'
@@ -26,7 +26,7 @@ async function lambdaFunction(execCtx) {
     let {
       id, toolNumber, toolName, toolDescription,
       toolLife, toolLifeUnit,
-      lastDrawnStock, remainingUnitsInStore, orderLeadTime,
+      lastDrawnStock, remStock, orderLeadTime,
       criticalParameterMeasure, criticalParameterMeasureUnit
     } = toolData;
 
@@ -49,7 +49,7 @@ async function lambdaFunction(execCtx) {
       INSERT INTO Tools
      (
       tool_life,
-      tool_life_unit
+      tool_life_unit,
       tool_number,
       tool_name,
       tool_description,
@@ -62,7 +62,7 @@ async function lambdaFunction(execCtx) {
       values`;
       sqlQuery += `('${toolLife}','${toolLifeUnit.toUpperCase()}','${toolNumber}',
       '${toolName}','${toolDescription}','${lastDrawnStock}',
-      '${remainingUnitsInStore}','${orderLeadTime}',
+      '${remStock}','${orderLeadTime}',
       '${criticalParameterMeasure}','${criticalParameterMeasureUnit}')`;
       
     }

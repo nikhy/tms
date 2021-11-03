@@ -25,7 +25,7 @@ async function lambdaFunction(execCtx) {
 
       sqlQuery = `
       INSERT INTO [ref].[ToolMaster]
-     (ToolNumber, DrawnDate, DisposedDate, DisposeReason, ToolLife, MachineUsed, Comments, ChangeInOperatorID, ChangeOutOperatorID, NumberOfReworks) values`;
+     (tool_number,drawn_date,disposed_date,reason,machine_used,change_in_operator) values`;
       sqlQuery += `('${ToolNumber}','${DrawnDate}','${DisposedDate}','${DisposeReason}','${ToolLife}','${MachineUsed}','${Comments}','${ChangeInOperatorID}','${ChangeOutOperatorID}','${NumberOfReworks}')`;
       const resultSqlInfo = await data.executeCommand(execCtx, {
         sqlCommand: sqlQuery,

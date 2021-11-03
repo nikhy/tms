@@ -147,4 +147,43 @@ Resources:
               Ref: TmsApi
             Path: /Tms/ChangeTool/
             Method: post
+  DeleteTool:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: DeleteTool/
+      Role: !Sub ${IAMROLE}
+      Events:
+        DeleteTool:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: TmsApi
+            Path: /Tms/DeleteTool/
+            Method: post
+  GetChanges:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetChanges/
+      Role: !Sub ${IAMROLE}
+      Events:
+        GetChanges:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: TmsApi
+            Path: /Tms/GetChanges/
+            Method: post
+  GetToolsInShop:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetToolsInShop/
+      Role: !Sub ${IAMROLE}
+      Events:
+        GetToolsInShop:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: TmsApi
+            Path: /Tms/GetToolsInShop/
+            Method: post
            
