@@ -186,4 +186,17 @@ Resources:
               Ref: TmsApi
             Path: /Tms/GetToolsInShop/
             Method: post
+  GetReports:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetReports/
+      Role: !Sub ${IAMROLE}
+      Events:
+        GetReports:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: TmsApi
+            Path: /Tms/GetReports/
+            Method: post
            

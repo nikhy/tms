@@ -1,5 +1,8 @@
+
 // send notification when Master tool life - cuurent tool life is 80% and 100%
+const moment = require('moment')
 const data = require('data-mod');
+
 
 exports.handler = async (event, context) => {
     let execCtx = {};
@@ -8,16 +11,23 @@ exports.handler = async (event, context) => {
 
 async function lambdaFunction(execCtx) {
     let { event, context, result, isAPICall, requestBody, requestParams } = execCtx;
-
-    const sqlQuery = `SELECT 
-    tool_number as toolNumber,
-    drawn_date as drawnDate,
-    disposed_date as disposedDate,
-    reason ,
-    machine_used as machineUsed,
-    change_in_operator as changeInOperator,
-    DATEDIFF(Day ,drawn_date, disposed_date) AS toolLife,
-    FROM tools ORDER BY disposed_date desc`;
+    const start_date = moment().add(-300,'days').format('YYYY-MM-DD')
+    let sqlQuery;
+    if (requestBody.reportType === 'toolLife')
+        sqlQuery = `  SELECT t.tool_number, avg(DATEDIFF(Day ,drawn_date, disposed_date)) as avg_tool_life, t.tool_life FROM change_requests cr 
+        INNER JOIN Tools t ON t.tool_number = cr.tool_number 
+        WHERE disposed_date >= '${start_date}' AND disposed_date <= GETDATE()
+        GROUP BY t.tool_number,t.tool_life
+        ORDER BY t.tool_number
+        `;
+    else
+        sqlQuery = `
+        SELECT t.tool_number, cr.reason ,count(*) "count" FROM change_requests cr 
+        INNER JOIN Tools t ON t.tool_number = cr.tool_number 
+        WHERE disposed_date >= '${start_date}' AND disposed_date <= GETDATE()
+        GROUP BY t.tool_number, cr.reason
+        ORDER BY t.tool_number
+        `;
     let changes = await data.executeQuery(execCtx, {
         sqlQuery: sqlQuery
     });

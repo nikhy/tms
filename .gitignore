@@ -1,2 +1,4 @@
 node_modules
 tms-be-app/out1.yaml
+!com\TmsDependencies\nodejs\node_modules\data-mod.js
+!com\TmsDependencies\nodejs\node_modules\utils.js
