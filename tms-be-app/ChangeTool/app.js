@@ -1,7 +1,7 @@
 /* ************************************************************
 ************************************************************ */
 
-const data = require('data_layer_optimized');
+const data = require('data-mod');
 // load the schema info of the table being used.
 
 exports.handler = async (event, context) => {
@@ -14,22 +14,29 @@ async function lambdaFunction(execCtx) {
   try {
     let ToolNumber = requestBody.ToolNumber,
     DrawnDate = requestBody.DrawnDate,
-    DisposedDate = requestBody.DisposedDate,
     DisposeReason = requestBody.DisposeReason,
     ToolLife = requestBody.ToolLife,
     MachineUsed = requestBody.MachineUsed,
-    Comments = requestBody.Comments,
-    ChangeInOperatorID = requestBody.ChangeInOperatorID,
-    ChangeOutOperatorID = requestBody.ChangeOutOperatorID,
-    NumberOfReworks = requestBody.NumberOfReworks;
+    ChangeOutOperatorID = requestBody.ChangeInOperatorID,
 
       sqlQuery = `
-      INSERT INTO [ref].[ToolMaster]
-     (tool_number,drawn_date,disposed_date,reason,machine_used,change_in_operator) values`;
-      sqlQuery += `('${ToolNumber}','${DrawnDate}','${DisposedDate}','${DisposeReason}','${ToolLife}','${MachineUsed}','${Comments}','${ChangeInOperatorID}','${ChangeOutOperatorID}','${NumberOfReworks}')`;
-      const resultSqlInfo = await data.executeCommand(execCtx, {
+      INSERT INTO change_requests
+     (tool_number,drawn_date,disposed_date,reason,machine_used,change_in_operator,change_out_operator) `;
+      sqlQuery += `SELECT '${ToolNumber}', Changed_on ,GETDATE(),'${DisposeReason}','${MachineUsed}', changed_by , '${ChangeOutOperatorID}'
+                  FROM machines
+                  WHERE machine_name = '${MachineUsed}' AND tool_number = '${ToolNumber}'`;
+      let resultSqlInfo = await data.executeCommand(execCtx, {
         sqlCommand: sqlQuery,
       });
+      console.log(sqlQuery);
+      sqlQuery = `
+        UPDATE machines SET changed_on = GETDATE() , units_worked_upon = 0
+                  WHERE machine_name = '${MachineUsed}' AND tool_number = '${ToolNumber}'`;
+      resultSqlInfo = await data.executeCommand(execCtx, {
+        sqlCommand: sqlQuery,
+      });
+      console.log(sqlQuery);
+
     result.ResponseCode = 0;
     result.Message = 'Tools data saved sucessfully';
   } catch (err) {

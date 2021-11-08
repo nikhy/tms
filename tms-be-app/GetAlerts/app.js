@@ -10,14 +10,15 @@ async function lambdaFunction(execCtx) {
     let { event, context, result, isAPICall, requestBody, requestParams } = execCtx;
 
     const sqlQuery = `SELECT 
-    tool_number as toolNumber,
-    drawn_date as drawnDate,
-    disposed_date as disposedDate,
-    reason ,
-    machine_used as machineUsed,
-    change_in_operator as changeInOperator,
-    DATEDIFF(Day ,drawn_date, disposed_date) AS toolLife
-    FROM change_requests ORDER BY disposed_date desc`;
+    alert_name AS alertName,
+    alter_desc AS alertDesc,
+    machine_name AS machine,
+    raised_on AS raisedOn,
+    status,
+    Tool_number AS toolNumber
+    FROM Alerts 
+    WHERE status = 'Open'
+    `;
     let changes = await data.executeQuery(execCtx, {
         sqlQuery: sqlQuery
     });

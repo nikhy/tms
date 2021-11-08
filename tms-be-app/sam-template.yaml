@@ -199,4 +199,39 @@ Resources:
               Ref: TmsApi
             Path: /Tms/GetReports/
             Method: post
-           
+  GetAlerts:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetAlerts/
+      Role: !Sub ${IAMROLE}
+      Events:
+        GetAlerts:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: TmsApi
+            Path: /Tms/GetAlerts/
+            Method: post
+  ClearNotifications:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ClearNotifications/
+      Role: !Sub ${IAMROLE}
+      Events:
+        ClearNotifications:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: TmsApi
+            Path: /Tms/ClearNotifications/
+            Method: post
+  UpdateMachines:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: UpdateMachines/
+      Role: !Sub ${IAMROLE}
+      Events:
+        NotificationTrigger:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 minute)

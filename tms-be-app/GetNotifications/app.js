@@ -8,19 +8,17 @@ exports.handler = async (event, context) => {
 
 async function lambdaFunction(execCtx) {
     let { event, context, result, isAPICall, requestBody, requestParams } = execCtx;
+    
+    const sqlQuery = `SELECT 
+    count
+    FROM notifications 
+    WHERE userid = '${requestBody.userId}'`;
+    let notifications = await data.executeQuery(execCtx, {
+        sqlQuery: sqlQuery
+    });
 
-    const sqlQuery = `SELECT Tool_Life FROM ref.ToolMaster WITH (NOLOCK)`;
-    let toolMaster = await data.executeQuery(execCtx, {
-        sqlQuery: sqlQuery
-    });
-    sqlQuery = `SELECT Tool_Life FROM ref.ToolMaster WITH (NOLOCK)`;
-    let toolUsed = await data.executeQuery(execCtx, {
-        sqlQuery: sqlQuery
-    });
-    let toolMasterLife = toolMaster.recordset[0].ToolLife, toolUsedLife = toolUsed.recordset[0].ToolLife;
-    if (((parseInt(toolMasterLife) - parseInt(toolUsedLife)) / parseInt(toolMasterLife)) == 0.8)
-        result._AlternateBody = '80% of tool life is reached';
-    if (((parseInt(toolMasterLife) - parseInt(toolUsedLife)) / parseInt(toolMasterLife)) == 1)
-        result._AlternateBody = 'End of tool life';
+    result.count = 0;
+    if (notifications.Records.length>0)
+        result.count = Number(notifications.Records[0].count);
     result.ResponseCode = 0;
 }
