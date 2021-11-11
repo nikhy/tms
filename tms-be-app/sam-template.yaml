@@ -235,3 +235,16 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: rate(1 minute)
+  GetAlertMetrics:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetAlertMetrics/
+      Role: !Sub ${IAMROLE}
+      Events:
+        GetAlertMetrics:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: TmsApi
+            Path: /Tms/GetAlertMetrics/
+            Method: post

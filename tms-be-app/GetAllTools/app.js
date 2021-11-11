@@ -19,8 +19,8 @@ async function lambdaFunction(execCtx) {
     last_drawn_stock AS lastDrawnStock,
     rem_stock AS remStock,
     order_lead_time AS orderLeadTime,
-    crictial_parameter_measure AS CriticalParameterMeasure,
-    crictial_parameter_measure_unit AS CriticalParameterMeasureUnit
+    crictial_parameter_measure AS criticalParameterMeasure,
+    crictial_parameter_measure_unit AS criticalParameterMeasureUnit
     FROM tools ORDER BY tool_number`;
     let tools = await data.executeQuery(execCtx, {
         sqlQuery: sqlQuery

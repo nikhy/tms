@@ -18,7 +18,7 @@ async function lambdaFunction(execCtx) {
     t.tool_life - m.Units_worked_upon AS rem_life, 
     t.rem_stock
     FROM machines m
-    INNER JOIN Tools t ON t.tool_number = m.tool_number  ORDER BY m.machine_name desc`;
+    INNER JOIN Tools t ON t.tool_number = m.tool_number  ORDER BY  t.tool_number`;
     let changes = await data.executeQuery(execCtx, {
         sqlQuery: sqlQuery
     });

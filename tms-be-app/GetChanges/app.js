@@ -16,7 +16,9 @@ async function lambdaFunction(execCtx) {
     reason ,
     machine_used as machineUsed,
     change_in_operator as changeInOperator,
-    DATEDIFF(Day ,drawn_date, disposed_date) AS toolLife
+    tool_life as toolLife,
+    change_out_operator as changeOutOperator,
+    comment AS comments
     FROM change_requests ORDER BY disposed_date desc`;
     let changes = await data.executeQuery(execCtx, {
         sqlQuery: sqlQuery

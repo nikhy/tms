@@ -14,7 +14,7 @@ async function lambdaFunction(execCtx) {
     const start_date = moment().add(-300,'days').format('YYYY-MM-DD')
     let sqlQuery;
     if (requestBody.reportType === 'toolLife')
-        sqlQuery = `  SELECT t.tool_number, avg(DATEDIFF(Day ,drawn_date, disposed_date)) as avg_tool_life, t.tool_life FROM change_requests cr 
+        sqlQuery = `  SELECT t.tool_number, avg(cr.tool_life) as avg_tool_life, t.tool_life FROM change_requests cr 
         INNER JOIN Tools t ON t.tool_number = cr.tool_number 
         WHERE disposed_date >= '${start_date}' AND disposed_date <= GETDATE()
         GROUP BY t.tool_number,t.tool_life
